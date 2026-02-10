@@ -46,7 +46,7 @@
              class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-gray-400
                     transition-all duration-200 hover:bg-white/5 hover:text-white">
             <span class="flex h-5 w-5 items-center justify-center [&>svg]:h-4 [&>svg]:w-4"
-                  [innerHTML]="tool.icon"></span>
+                  [innerHTML]="tool.icon | safeHtml"></span>
             {{ tool.name }}
           </a>
         }

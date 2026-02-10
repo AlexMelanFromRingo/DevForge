@@ -1,4 +1,4 @@
-<df-tool-layout title="Hash Generator" description="Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from any text.">
+<df-tool-layout title="Hash Generator" description="Generate CRC32, MD5, SHA-1, SHA-256, SHA-384, SHA-512, and HMAC hashes from any text.">
 
   <!-- Input -->
   <textarea
@@ -8,49 +8,56 @@
     class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50 resize-y min-h-[120px]">
   </textarea>
 
-  <!-- Uppercase toggle -->
-  <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
-    <input type="checkbox" [ngModel]="uppercase()" (ngModelChange)="uppercase.set($event)"
-           class="rounded border-gray-600 bg-gray-800 text-primary-500">
-    Uppercase output
-  </label>
+  <!-- Options row -->
+  <div class="flex flex-wrap items-center gap-4">
+    <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+      <input type="checkbox" [ngModel]="uppercase()" (ngModelChange)="uppercase.set($event)"
+             class="rounded border-gray-600 bg-gray-800 text-primary-500">
+      Uppercase output
+    </label>
+
+    <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+      <input type="checkbox" [ngModel]="showHmac()" (ngModelChange)="showHmac.set($event)"
+             class="rounded border-gray-600 bg-gray-800 text-primary-500">
+      HMAC mode
+    </label>
+  </div>
+
+  <!-- HMAC key input -->
+  @if (showHmac()) {
+    <div class="animate-fade-in">
+      <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-gray-500">HMAC Secret Key</label>
+      <input type="text"
+        [ngModel]="hmacKey()"
+        (ngModelChange)="hmacKey.set($event)"
+        placeholder="Enter secret key..."
+        class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-3 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50">
+    </div>
+  }
+
+  <!-- Algorithms badge bar -->
+  <div class="flex flex-wrap gap-2">
+    <span class="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">CRC32</span>
+    <span class="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">MD5</span>
+    <span class="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">SHA-1</span>
+    <span class="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">SHA-256</span>
+    <span class="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">SHA-384</span>
+    <span class="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[11px] font-medium text-gray-400">SHA-512</span>
+    @if (showHmac()) {
+      <span class="rounded-full border border-primary-500/30 bg-primary-500/10 px-2.5 py-0.5 text-[11px] font-medium text-primary-400">HMAC-SHA256</span>
+      <span class="rounded-full border border-primary-500/30 bg-primary-500/10 px-2.5 py-0.5 text-[11px] font-medium text-primary-400">HMAC-SHA512</span>
+    }
+  </div>
 
   <!-- Results -->
   <div class="space-y-3">
-    @if (md5Result()) {
+    @for (h of hashes(); track h.label) {
       <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
         <div class="mb-2 flex items-center justify-between">
-          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">MD5</span>
-          <df-copy-button [text]="display(md5Result())" label="MD5 hash" />
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">{{ h.label }}</span>
+          <df-copy-button [text]="display(h.value)" />
         </div>
-        <code class="block break-all font-mono text-sm text-primary-400">{{ display(md5Result()) }}</code>
-      </div>
-    }
-    @if (sha1Result()) {
-      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
-        <div class="mb-2 flex items-center justify-between">
-          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">SHA-1</span>
-          <df-copy-button [text]="display(sha1Result())" label="SHA-1 hash" />
-        </div>
-        <code class="block break-all font-mono text-sm text-accent-400">{{ display(sha1Result()) }}</code>
-      </div>
-    }
-    @if (sha256Result()) {
-      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
-        <div class="mb-2 flex items-center justify-between">
-          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">SHA-256</span>
-          <df-copy-button [text]="display(sha256Result())" label="SHA-256 hash" />
-        </div>
-        <code class="block break-all font-mono text-sm text-emerald-400">{{ display(sha256Result()) }}</code>
-      </div>
-    }
-    @if (sha512Result()) {
-      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
-        <div class="mb-2 flex items-center justify-between">
-          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">SHA-512</span>
-          <df-copy-button [text]="display(sha512Result())" label="SHA-512 hash" />
-        </div>
-        <code class="block break-all font-mono text-sm text-amber-400">{{ display(sha512Result()) }}</code>
+        <code class="block break-all font-mono text-sm" [class]="h.color">{{ display(h.value) }}</code>
       </div>
     }
   </div>

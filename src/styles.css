@@ -58,15 +58,119 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-sans);
-  background: #050510;
-  color: #e5e7eb;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #475569; }
+/* ── Dark theme (default) ── */
+html.dark body {
+  background: #050510;
+  color: #e5e7eb;
+}
 
-::selection { background: #6366f180; }
+html.dark ::-webkit-scrollbar { width: 5px; height: 5px; }
+html.dark ::-webkit-scrollbar-track { background: transparent; }
+html.dark ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #475569; }
+html.dark ::selection { background: #6366f180; }
+
+/* ── Light theme ── */
+html.light body {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+html.light ::selection { background: #6366f140; }
+html.light ::-webkit-scrollbar { width: 5px; height: 5px; }
+html.light ::-webkit-scrollbar-track { background: transparent; }
+html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+html.light ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+/* Sidebar */
+html.light aside {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Toolbar */
+html.light header {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Footer */
+html.light footer {
+  border-color: #e2e8f0 !important;
+}
+
+/* Text overrides */
+html.light .text-white { color: #1e293b !important; }
+html.light .text-gray-200 { color: #334155 !important; }
+html.light .text-gray-400 { color: #64748b !important; }
+html.light .text-gray-500 { color: #94a3b8 !important; }
+html.light .text-gray-600 { color: #94a3b8 !important; }
+
+/* Background overrides */
+html.light .bg-gray-950\/80,
+html.light .bg-gray-950\/95,
+html.light .bg-gray-950 { background-color: #ffffff !important; }
+html.light .bg-gray-900\/80,
+html.light .bg-gray-900 { background-color: #f8fafc !important; }
+html.light .bg-gray-800 { background-color: #e2e8f0 !important; }
+
+/* Surface/glass overrides */
+html.light .bg-white\/\[0\.03\],
+html.light .bg-white\/5 { background-color: rgba(0, 0, 0, 0.03) !important; }
+html.light .bg-white\/\[0\.06\] { background-color: rgba(0, 0, 0, 0.05) !important; }
+html.light .bg-white\/10 { background-color: rgba(0, 0, 0, 0.06) !important; }
+
+/* Border overrides */
+html.light .border-white\/5,
+html.light .border-white\/10 { border-color: #e2e8f0 !important; }
+html.light .hover\:border-primary-500\/30:hover { border-color: #818cf8 !important; }
+
+/* Input/textarea */
+html.light textarea,
+html.light input[type="text"],
+html.light input[type="number"],
+html.light select {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+html.light textarea::placeholder,
+html.light input::placeholder { color: #94a3b8 !important; }
+html.light textarea:focus,
+html.light input:focus,
+html.light select:focus { border-color: #6366f1 !important; }
+
+/* Code blocks */
+html.light code { color: #4f46e5 !important; }
+html.light pre { background-color: #f8fafc !important; border-color: #e2e8f0 !important; color: #334155 !important; }
+
+/* Gradient text - keep gradient visible on light bg */
+html.light .from-white { --tw-gradient-from: #1e293b !important; }
+html.light .via-gray-200 { --tw-gradient-via: #475569 !important; }
+html.light .to-gray-400 { --tw-gradient-to: #64748b !important; }
+
+/* Hover states */
+html.light .hover\:bg-white\/5:hover { background-color: rgba(0, 0, 0, 0.05) !important; }
+html.light .hover\:text-white:hover { color: #1e293b !important; }
+
+/* Shadows for light mode cards */
+html.light .hover\:shadow-\[0_0_30px_rgba\(99\,102\,241\,0\.15\)\]:hover {
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.12) !important;
+}
+
+/* Mobile overlay */
+html.light .bg-black\/60 { background-color: rgba(0, 0, 0, 0.3) !important; }
+
+/* Donation widget */
+html.light .from-primary-500\/10 { --tw-gradient-from: rgba(99, 102, 241, 0.08) !important; }
+
+/* Diff colors stay the same (they work on both themes) */
+
+/* Keep primary/accent colored text visible */
+html.light .text-primary-400 { color: #4f46e5 !important; }
+html.light .text-accent-400 { color: #0891b2 !important; }

@@ -2,10 +2,11 @@ import { Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { DonationWidget } from '../donation-widget/donation-widget';
 import { TOOL_CATEGORIES } from '../../models/tool';
+import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 
 @Component({
   selector: 'df-sidebar',
-  imports: [RouterLink, RouterLinkActive, DonationWidget],
+  imports: [RouterLink, RouterLinkActive, DonationWidget, SafeHtmlPipe],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
 })

@@ -26,7 +26,7 @@
                 hover:shadow-[0_0_30px_rgba(99,102,241,0.15)]">
         <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500/10 text-primary-400
                     transition-colors group-hover:bg-primary-500/20 [&>svg]:h-5 [&>svg]:w-5"
-             [innerHTML]="tool.icon"></div>
+             [innerHTML]="tool.icon | safeHtml"></div>
         <div>
           <h3 class="font-semibold text-white">{{ tool.name }}</h3>
           <p class="mt-1 text-sm text-gray-400">{{ tool.description }}</p>

@@ -2,30 +2,81 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class HashService {
+  async sha1(input: string): Promise<string> {
+    return this.webCryptoHash('SHA-1', input);
+  }
+
   async sha256(input: string): Promise<string> {
-    const data = new TextEncoder().encode(input);
-    const buf = await crypto.subtle.digest('SHA-256', data);
-    return this.hex(buf);
+    return this.webCryptoHash('SHA-256', input);
+  }
+
+  async sha384(input: string): Promise<string> {
+    return this.webCryptoHash('SHA-384', input);
   }
 
   async sha512(input: string): Promise<string> {
-    const data = new TextEncoder().encode(input);
-    const buf = await crypto.subtle.digest('SHA-512', data);
-    return this.hex(buf);
-  }
-
-  async sha1(input: string): Promise<string> {
-    const data = new TextEncoder().encode(input);
-    const buf = await crypto.subtle.digest('SHA-1', data);
-    return this.hex(buf);
+    return this.webCryptoHash('SHA-512', input);
   }
 
   md5(input: string): string {
     return this.md5Impl(input);
   }
 
+  crc32(input: string): string {
+    return this.crc32Impl(input);
+  }
+
+  async hmacSha256(input: string, key: string): Promise<string> {
+    const enc = new TextEncoder();
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw', enc.encode(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+    );
+    const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(input));
+    return this.hex(sig);
+  }
+
+  async hmacSha512(input: string, key: string): Promise<string> {
+    const enc = new TextEncoder();
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw', enc.encode(key), { name: 'HMAC', hash: 'SHA-512' }, false, ['sign']
+    );
+    const sig = await crypto.subtle.sign('HMAC', cryptoKey, enc.encode(input));
+    return this.hex(sig);
+  }
+
+  private async webCryptoHash(algo: string, input: string): Promise<string> {
+    const data = new TextEncoder().encode(input);
+    const buf = await crypto.subtle.digest(algo, data);
+    return this.hex(buf);
+  }
+
   private hex(buf: ArrayBuffer): string {
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  private crc32Impl(str: string): string {
+    const table = this.crc32Table();
+    const bytes = new TextEncoder().encode(str);
+    let crc = 0xFFFFFFFF;
+    for (let i = 0; i < bytes.length; i++) {
+      crc = (crc >>> 8) ^ table[(crc ^ bytes[i]) & 0xFF];
+    }
+    return ((crc ^ 0xFFFFFFFF) >>> 0).toString(16).padStart(8, '0');
+  }
+
+  private _crc32Table: number[] | null = null;
+  private crc32Table(): number[] {
+    if (this._crc32Table) return this._crc32Table;
+    const table: number[] = [];
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let j = 0; j < 8; j++) {
+        c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      }
+      table[i] = c;
+    }
+    this._crc32Table = table;
+    return table;
   }
 
   // Pure JS MD5 (RFC 1321)

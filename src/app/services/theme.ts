@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, effect } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -7,6 +7,12 @@ export class ThemeService {
   constructor() {
     const saved = localStorage.getItem('df-theme');
     if (saved !== null) this.isDark.set(saved === 'dark');
+
+    effect(() => {
+      const dark = this.isDark();
+      document.documentElement.classList.toggle('dark', dark);
+      document.documentElement.classList.toggle('light', !dark);
+    });
   }
 
   toggle() {
