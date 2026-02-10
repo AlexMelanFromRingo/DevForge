@@ -1,0 +1,61 @@
+<df-tool-layout title="Hash Generator" description="Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from any text.">
+
+  <!-- Input -->
+  <textarea
+    [ngModel]="input()"
+    (ngModelChange)="input.set($event)"
+    placeholder="Enter text to hash..."
+    class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50 resize-y min-h-[120px]">
+  </textarea>
+
+  <!-- Uppercase toggle -->
+  <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+    <input type="checkbox" [ngModel]="uppercase()" (ngModelChange)="uppercase.set($event)"
+           class="rounded border-gray-600 bg-gray-800 text-primary-500">
+    Uppercase output
+  </label>
+
+  <!-- Results -->
+  <div class="space-y-3">
+    @if (md5Result()) {
+      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">MD5</span>
+          <df-copy-button [text]="display(md5Result())" label="MD5 hash" />
+        </div>
+        <code class="block break-all font-mono text-sm text-primary-400">{{ display(md5Result()) }}</code>
+      </div>
+    }
+    @if (sha1Result()) {
+      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">SHA-1</span>
+          <df-copy-button [text]="display(sha1Result())" label="SHA-1 hash" />
+        </div>
+        <code class="block break-all font-mono text-sm text-accent-400">{{ display(sha1Result()) }}</code>
+      </div>
+    }
+    @if (sha256Result()) {
+      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">SHA-256</span>
+          <df-copy-button [text]="display(sha256Result())" label="SHA-256 hash" />
+        </div>
+        <code class="block break-all font-mono text-sm text-emerald-400">{{ display(sha256Result()) }}</code>
+      </div>
+    }
+    @if (sha512Result()) {
+      <div class="rounded-xl border border-white/5 bg-white/[0.03] p-4">
+        <div class="mb-2 flex items-center justify-between">
+          <span class="text-xs font-semibold uppercase tracking-wider text-gray-500">SHA-512</span>
+          <df-copy-button [text]="display(sha512Result())" label="SHA-512 hash" />
+        </div>
+        <code class="block break-all font-mono text-sm text-amber-400">{{ display(sha512Result()) }}</code>
+      </div>
+    }
+  </div>
+
+  @if (!input()) {
+    <p class="text-center text-sm text-gray-500">Start typing to generate hashes...</p>
+  }
+</df-tool-layout>

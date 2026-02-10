@@ -1,0 +1,105 @@
+<df-tool-layout title="Regex Tester" description="Test regular expressions against text with real-time highlighting.">
+  <!-- Pattern & Flags -->
+  <div class="space-y-3">
+    <label class="block text-sm font-medium text-gray-300">Pattern</label>
+    <div class="flex items-center gap-2">
+      <span class="text-lg text-gray-500 font-mono">/</span>
+      <input
+        type="text"
+        [ngModel]="pattern()"
+        (ngModelChange)="onPatternChange($event)"
+        placeholder="Enter regex pattern..."
+        class="flex-1 rounded-lg border border-white/10 bg-gray-900/80 px-4 py-2.5 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50"
+        spellcheck="false" />
+      <span class="text-lg text-gray-500 font-mono">/{{ computedFlags() }}</span>
+    </div>
+
+    @if (error()) {
+      <p class="text-sm text-red-400 font-mono">{{ error() }}</p>
+    }
+  </div>
+
+  <!-- Flags -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-gray-300">Flags</label>
+    <div class="flex flex-wrap gap-3">
+      @for (f of [
+        { key: 'g', label: 'Global (g)', active: flagG },
+        { key: 'i', label: 'Case Insensitive (i)', active: flagI },
+        { key: 'm', label: 'Multiline (m)', active: flagM },
+        { key: 's', label: 'Dotall (s)', active: flagS }
+      ]; track f.key) {
+        <label class="flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all"
+          [class]="f.active()
+            ? 'border-primary-500/30 bg-primary-500/10 text-primary-400'
+            : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20'">
+          <input
+            type="checkbox"
+            [checked]="f.active()"
+            (change)="toggleFlag($any(f.key))"
+            class="hidden" />
+          {{ f.label }}
+        </label>
+      }
+    </div>
+  </div>
+
+  <!-- Test String -->
+  <div class="space-y-2">
+    <label class="block text-sm font-medium text-gray-300">Test String</label>
+    <textarea
+      [ngModel]="testString()"
+      (ngModelChange)="onTestStringChange($event)"
+      placeholder="Enter text to test against..."
+      class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50 resize-y min-h-[200px]"
+      rows="6"
+      spellcheck="false"></textarea>
+  </div>
+
+  <!-- Results -->
+  <div class="space-y-3">
+    <div class="flex items-center justify-between">
+      <label class="block text-sm font-medium text-gray-300">Highlighted Output</label>
+      <div class="flex items-center gap-3">
+        @if (matchCount() > 0) {
+          <span class="rounded-full bg-primary-500/10 px-3 py-1 text-xs font-medium text-primary-400">
+            {{ matchCount() }} match{{ matchCount() === 1 ? '' : 'es' }}
+          </span>
+        }
+      </div>
+    </div>
+    <div
+      class="min-h-[120px] rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 whitespace-pre-wrap break-all"
+      [innerHTML]="highlightedHtml() || '<span class=\'text-gray-500 italic\'>Output will appear here...</span>'">
+    </div>
+  </div>
+
+  <!-- Match Details -->
+  @if (matches().length > 0) {
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Match Details</label>
+      <div class="rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-white/10 text-left">
+              <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">#</th>
+              <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Match</th>
+              <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Index</th>
+              <th class="px-4 py-2 text-xs font-medium text-gray-400 uppercase tracking-wider">Length</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (m of matches(); track $index; let i = $index) {
+              <tr class="border-b border-white/5">
+                <td class="px-4 py-2 text-gray-500">{{ i + 1 }}</td>
+                <td class="px-4 py-2 font-mono text-primary-400">{{ m.value }}</td>
+                <td class="px-4 py-2 text-gray-400">{{ m.index }}</td>
+                <td class="px-4 py-2 text-gray-400">{{ m.length }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</df-tool-layout>

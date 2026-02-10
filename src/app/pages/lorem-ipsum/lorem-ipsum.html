@@ -1,0 +1,40 @@
+<df-tool-layout title="Lorem Ipsum Generator" description="Generate placeholder text for your designs and mockups.">
+
+  <!-- Controls -->
+  <div class="flex flex-wrap items-end gap-4">
+    <div>
+      <label class="mb-1.5 block text-xs font-medium text-gray-500">Count</label>
+      <input type="number" [ngModel]="count()" (ngModelChange)="count.set($event)" min="1" max="100"
+             class="w-24 rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 text-sm text-gray-200 outline-none focus:border-primary-500/50">
+    </div>
+    <div>
+      <label class="mb-1.5 block text-xs font-medium text-gray-500">Unit</label>
+      <select [ngModel]="unit()" (ngModelChange)="unit.set($event)"
+              class="rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 text-sm text-gray-200 outline-none focus:border-primary-500/50">
+        <option value="paragraphs">Paragraphs</option>
+        <option value="sentences">Sentences</option>
+        <option value="words">Words</option>
+      </select>
+    </div>
+    <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer py-2">
+      <input type="checkbox" [ngModel]="startWithLorem()" (ngModelChange)="startWithLorem.set($event)"
+             class="rounded border-gray-600 bg-gray-800 text-primary-500">
+      Start with "Lorem ipsum..."
+    </label>
+    <button (click)="generate()"
+            class="rounded-lg bg-primary-500 px-5 py-2 text-sm font-medium text-white transition hover:bg-primary-600">
+      Generate
+    </button>
+  </div>
+
+  <!-- Output -->
+  <div class="relative">
+    <div class="mb-2 flex items-center justify-between">
+      <span class="text-xs text-gray-500">{{ wordCount() }} words &middot; {{ charCount() }} characters</span>
+      <df-copy-button [text]="output()" label="lorem ipsum text" />
+    </div>
+    <div class="whitespace-pre-wrap rounded-xl border border-white/10 bg-gray-900/50 p-6 font-serif text-sm leading-relaxed text-gray-300">
+      {{ output() }}
+    </div>
+  </div>
+</df-tool-layout>

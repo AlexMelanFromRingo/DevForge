@@ -1,0 +1,72 @@
+<df-tool-layout title="JSON Formatter & Validator" description="Format, minify, or validate JSON data instantly.">
+  <!-- Mode Toggle & Options -->
+  <div class="flex flex-wrap items-center gap-3">
+    <div class="flex rounded-xl border border-white/10 bg-white/5 p-1">
+      @for (m of ['format', 'minify', 'validate']; track m) {
+        <button
+          (click)="setMode($any(m))"
+          [class]="mode() === m
+            ? 'rounded-lg bg-primary-500/20 px-4 py-2 text-sm font-medium text-primary-400 transition-all'
+            : 'rounded-lg px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-all cursor-pointer'">
+          {{ m === 'format' ? 'Format' : m === 'minify' ? 'Minify' : 'Validate' }}
+        </button>
+      }
+    </div>
+
+    @if (mode() === 'format') {
+      <div class="flex items-center gap-2">
+        <label class="text-sm text-gray-400">Indent:</label>
+        <select
+          [ngModel]="indentSize()"
+          (ngModelChange)="setIndentSize($event)"
+          class="rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 text-sm text-gray-200 outline-none focus:border-primary-500/50">
+          <option [ngValue]="2">2 spaces</option>
+          <option [ngValue]="4">4 spaces</option>
+          <option [ngValue]="8">8 spaces</option>
+        </select>
+      </div>
+    }
+  </div>
+
+  <!-- Editor Panels -->
+  <div class="grid gap-4 md:grid-cols-2">
+    <!-- Input -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Input</label>
+      <textarea
+        [ngModel]="input()"
+        (ngModelChange)="onInput($event)"
+        placeholder="Paste your JSON here..."
+        class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50 resize-y min-h-[200px]"
+        rows="12"
+        spellcheck="false"></textarea>
+    </div>
+
+    <!-- Output -->
+    <div class="space-y-2">
+      <div class="flex items-center justify-between">
+        <label class="block text-sm font-medium text-gray-300">Output</label>
+        @if (output() && !error()) {
+          <df-copy-button [text]="output()" label="output" />
+        }
+      </div>
+      <pre
+        class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 overflow-auto resize-y min-h-[200px] whitespace-pre-wrap"
+        [class.text-emerald-400]="mode() === 'validate' && output() === 'Valid JSON'"
+        [class.text-red-400]="mode() === 'validate' && output() !== 'Valid JSON' && output() !== ''"
+        >{{ output() || ' ' }}</pre>
+    </div>
+  </div>
+
+  <!-- Error Message -->
+  @if (error() && mode() !== 'validate') {
+    <div class="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
+      <div class="flex items-start gap-3">
+        <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+        </svg>
+        <p class="text-sm text-red-400 font-mono">{{ error() }}</p>
+      </div>
+    </div>
+  }
+</df-tool-layout>

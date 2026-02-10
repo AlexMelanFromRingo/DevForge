@@ -1,0 +1,36 @@
+<df-tool-layout title="UUID Generator" description="Generate RFC 4122 version 4 UUIDs with cryptographic randomness.">
+
+  <!-- Controls -->
+  <div class="flex flex-wrap items-end gap-4">
+    <div>
+      <label class="mb-1.5 block text-xs font-medium text-gray-500">Count</label>
+      <input type="number" [ngModel]="count()" (ngModelChange)="count.set($event)" min="1" max="1000"
+             class="w-24 rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 text-sm text-gray-200 outline-none focus:border-primary-500/50">
+    </div>
+    <div>
+      <label class="mb-1.5 block text-xs font-medium text-gray-500">Format</label>
+      <select [ngModel]="format()" (ngModelChange)="format.set($event)"
+              class="rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 text-sm text-gray-200 outline-none focus:border-primary-500/50">
+        <option value="lowercase">lowercase</option>
+        <option value="uppercase">UPPERCASE</option>
+        <option value="nohyphens">No Hyphens</option>
+      </select>
+    </div>
+    <button (click)="generate()"
+            class="rounded-lg bg-primary-500 px-5 py-2 text-sm font-medium text-white transition hover:bg-primary-600">
+      Generate
+    </button>
+    <df-copy-button [text]="allText()" label="all UUIDs" />
+  </div>
+
+  <!-- UUID List -->
+  <div class="space-y-1">
+    @for (uuid of formatted(); track $index) {
+      <div class="group flex items-center justify-between rounded-lg bg-white/[0.03] px-4 py-2.5
+                  border border-transparent transition hover:border-white/10">
+        <code class="font-mono text-sm text-gray-300">{{ uuid }}</code>
+        <df-copy-button [text]="uuid" label="UUID" />
+      </div>
+    }
+  </div>
+</df-tool-layout>

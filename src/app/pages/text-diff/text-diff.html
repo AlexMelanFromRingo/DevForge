@@ -1,0 +1,87 @@
+<df-tool-layout title="Text Diff Checker" description="Compare two texts side by side and see the differences highlighted.">
+  <!-- Input Panels -->
+  <div class="grid gap-4 md:grid-cols-2">
+    <!-- Text A -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Original Text</label>
+      <textarea
+        [ngModel]="textA()"
+        (ngModelChange)="onTextAChange($event)"
+        placeholder="Paste original text here..."
+        class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50 resize-y min-h-[200px]"
+        rows="10"
+        spellcheck="false"></textarea>
+    </div>
+
+    <!-- Text B -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Modified Text</label>
+      <textarea
+        [ngModel]="textB()"
+        (ngModelChange)="onTextBChange($event)"
+        placeholder="Paste modified text here..."
+        class="w-full rounded-xl border border-white/10 bg-gray-900/80 p-4 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50 resize-y min-h-[200px]"
+        rows="10"
+        spellcheck="false"></textarea>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  @if (hasDiff()) {
+    <div class="flex flex-wrap gap-3">
+      <div class="flex items-center gap-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 px-3 py-2">
+        <div class="h-2.5 w-2.5 rounded-full bg-emerald-400"></div>
+        <span class="text-sm font-medium text-emerald-400">{{ stats().added }} added</span>
+      </div>
+      <div class="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/5 px-3 py-2">
+        <div class="h-2.5 w-2.5 rounded-full bg-red-400"></div>
+        <span class="text-sm font-medium text-red-400">{{ stats().removed }} removed</span>
+      </div>
+      <div class="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2">
+        <div class="h-2.5 w-2.5 rounded-full bg-gray-500"></div>
+        <span class="text-sm font-medium text-gray-400">{{ stats().unchanged }} unchanged</span>
+      </div>
+    </div>
+  }
+
+  <!-- Diff Output -->
+  @if (hasDiff()) {
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Diff Output</label>
+      <div class="rounded-xl border border-white/10 bg-gray-900/80 overflow-hidden">
+        <div class="overflow-auto max-h-[600px]">
+          @for (line of diffResult(); track $index; let i = $index) {
+            <div class="flex font-mono text-sm leading-6"
+              [class]="line.type === 'removed'
+                ? 'bg-red-500/10'
+                : line.type === 'added'
+                  ? 'bg-emerald-500/10'
+                  : ''">
+              <span class="w-10 flex-shrink-0 select-none border-r border-white/5 px-2 text-right text-xs leading-6 text-gray-600">
+                {{ i + 1 }}
+              </span>
+              <span class="w-6 flex-shrink-0 select-none text-center"
+                [class]="line.type === 'removed'
+                  ? 'text-red-400'
+                  : line.type === 'added'
+                    ? 'text-emerald-400'
+                    : 'text-gray-600'">
+                {{ line.type === 'removed' ? '-' : line.type === 'added' ? '+' : ' ' }}
+              </span>
+              <span class="flex-1 whitespace-pre-wrap break-all px-2"
+                [class]="line.type === 'removed'
+                  ? 'text-red-400'
+                  : line.type === 'added'
+                    ? 'text-emerald-400'
+                    : 'text-gray-500'">{{ line.text }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  } @else if (textA() || textB()) {
+    <div class="rounded-xl border border-white/10 bg-white/5 p-8 text-center">
+      <p class="text-sm text-gray-400">Enter text in both fields to see the diff.</p>
+    </div>
+  }
+</df-tool-layout>

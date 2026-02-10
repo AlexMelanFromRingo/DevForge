@@ -1,0 +1,15 @@
+<div class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
+  <df-sidebar [isOpen]="sidebarOpen()" (closeSidebar)="sidebarOpen.set(false)" />
+
+  <!-- Main content area -->
+  <div class="flex min-w-0 flex-1 flex-col overflow-hidden">
+    <df-toolbar (toggleSidebar)="toggleSidebar()" />
+
+    <main class="flex-1 overflow-y-auto p-4 md:p-8">
+      <router-outlet />
+    </main>
+
+    <df-footer />
+  </div>
+</div>

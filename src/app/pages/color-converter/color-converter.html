@@ -1,0 +1,117 @@
+<df-tool-layout title="Color Converter" description="Convert colors between HEX, RGB, and HSL formats.">
+  <!-- Color Preview & Picker -->
+  <div class="flex flex-col items-center gap-4 sm:flex-row">
+    <div
+      class="h-24 w-24 rounded-2xl border border-white/10 shadow-lg transition-colors duration-200"
+      [style.background]="isValid() ? hexDisplay() : '#000'">
+    </div>
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-300">Pick a color</label>
+      <input
+        type="color"
+        [ngModel]="hexDisplay()"
+        (ngModelChange)="onColorPickerChange($event)"
+        class="h-10 w-20 cursor-pointer rounded-lg border border-white/10 bg-transparent" />
+    </div>
+  </div>
+
+  <!-- HEX Section -->
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-white uppercase tracking-wider">HEX</h3>
+      <df-copy-button [text]="hexDisplay()" label="HEX" />
+    </div>
+    <input
+      type="text"
+      [ngModel]="hexInput()"
+      (ngModelChange)="onHexChange($event)"
+      placeholder="#000000"
+      class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-4 py-2.5 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50"
+      spellcheck="false" />
+    @if (!isValid() && hexInput().length > 0) {
+      <p class="text-xs text-red-400">Invalid hex color</p>
+    }
+  </div>
+
+  <!-- RGB Section -->
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-white uppercase tracking-wider">RGB</h3>
+      <df-copy-button [text]="rgbString()" label="RGB" />
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="space-y-1">
+        <label class="block text-xs text-gray-400">R</label>
+        <input
+          type="number"
+          [ngModel]="rgb().r"
+          (ngModelChange)="onRgbChange('r', $event)"
+          min="0"
+          max="255"
+          class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-xs text-gray-400">G</label>
+        <input
+          type="number"
+          [ngModel]="rgb().g"
+          (ngModelChange)="onRgbChange('g', $event)"
+          min="0"
+          max="255"
+          class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-xs text-gray-400">B</label>
+        <input
+          type="number"
+          [ngModel]="rgb().b"
+          (ngModelChange)="onRgbChange('b', $event)"
+          min="0"
+          max="255"
+          class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50" />
+      </div>
+    </div>
+    <p class="font-mono text-sm text-gray-400">{{ rgbString() }}</p>
+  </div>
+
+  <!-- HSL Section -->
+  <div class="rounded-xl border border-white/10 bg-white/5 p-4 space-y-3">
+    <div class="flex items-center justify-between">
+      <h3 class="text-sm font-semibold text-white uppercase tracking-wider">HSL</h3>
+      <df-copy-button [text]="hslString()" label="HSL" />
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      <div class="space-y-1">
+        <label class="block text-xs text-gray-400">H (0-360)</label>
+        <input
+          type="number"
+          [ngModel]="hsl().h"
+          (ngModelChange)="onHslChange('h', $event)"
+          min="0"
+          max="360"
+          class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-xs text-gray-400">S (0-100)</label>
+        <input
+          type="number"
+          [ngModel]="hsl().s"
+          (ngModelChange)="onHslChange('s', $event)"
+          min="0"
+          max="100"
+          class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50" />
+      </div>
+      <div class="space-y-1">
+        <label class="block text-xs text-gray-400">L (0-100)</label>
+        <input
+          type="number"
+          [ngModel]="hsl().l"
+          (ngModelChange)="onHslChange('l', $event)"
+          min="0"
+          max="100"
+          class="w-full rounded-lg border border-white/10 bg-gray-900/80 px-3 py-2 font-mono text-sm text-gray-200 outline-none focus:border-primary-500/50" />
+      </div>
+    </div>
+    <p class="font-mono text-sm text-gray-400">{{ hslString() }}</p>
+  </div>
+</df-tool-layout>
